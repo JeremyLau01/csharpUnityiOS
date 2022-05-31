@@ -11,7 +11,7 @@ public class ARCursor : MonoBehaviour
 
     public bool useCursor = true;
 
-    GameObject hoop = objectToPlace;
+    public GameObject hoop;
 
     // Start is called before the first frame update
     void Start()
@@ -33,17 +33,9 @@ public class ARCursor : MonoBehaviour
             if (useCursor)
             {
                 Destroy(hoop);
+                hoop = objectToPlace;
+
                 GameObject.Instantiate(hoop, transform.position, transform.rotation);
-            }
-            else
-            {
-                List<ARRaycastHit> hits = new List<ARRaycastHit>();
-                raycastManager.Raycast(Input.GetTouch(0).position, hits, UnityEngine.XR.ARSubsystems.TrackableType.Planes);
-                if (hits.Count > 0)
-                {
-                    Destroy(hoop);
-                    GameObject.Instantiate(hoop, hits[0].pose.position, hits[0].pose.rotation);
-                }
             }
         }
     }

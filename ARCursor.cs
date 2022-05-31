@@ -9,34 +9,23 @@ public class ARCursor : MonoBehaviour
     public GameObject objectToPlace;
     public ARRaycastManager raycastManager;
 
-    public bool useCursor = true;
-
-    public GameObject hoop;
+    GameObject hoop = null; // temporary object so can place new hoops and destroy old ones
 
     // Start is called before the first frame update
     void Start()
     {
-        cursorChildObject.SetActive(useCursor);
-
+        cursorChildObject.SetActive(true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (useCursor)
-        {
-            UpdateCursor();
-        }
-
+        UpdateCursor();
+        
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-            if (useCursor)
-            {
-                Destroy(hoop);
-                hoop = objectToPlace;
-
-                GameObject.Instantiate(hoop, transform.position, transform.rotation);
-            }
+            Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
+            hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object
         }
     }
 

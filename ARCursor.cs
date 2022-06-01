@@ -9,6 +9,10 @@ public class ARCursor : MonoBehaviour
     public GameObject objectToPlace;
     public ARRaycastManager raycastManager;
 
+
+    // trying to have the object point towards the viewer on place down
+    public Transform target; // transform of the AR camera
+
     GameObject hoop = null; // temporary object so can place new hoops and destroy old ones
 
     // Start is called before the first frame update
@@ -26,6 +30,7 @@ public class ARCursor : MonoBehaviour
         {
             Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
             hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object
+            hoop.transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z)); // rotate on y axis towards user, using AR camera's position
         }
     }
 

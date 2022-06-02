@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RecordToggle : MonoBehaviour
 {
     public Button StartRecord;
     public Button StopRecord;
+
+    public GameObject StartR;
+    public GameObject StopR;
 
     bool StartRec = true;
     bool StopRec = false;
@@ -15,11 +19,9 @@ public class RecordToggle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartRecord.onClick.AddListener(ClickOn);
+        StopRecord.onClick.AddListener(ClickOff);
         UpdateButtons();
-
-        Button btnOn = StartRecord.GetComponent<Button>();
-        btnOn.onClick.AddListener(ClickOn);
-        Button btnOff = StopRecord.GetComponent<Button>();
     }
 
     void ClickOn()
@@ -30,10 +32,17 @@ public class RecordToggle : MonoBehaviour
 
     }
 
+    void ClickOff()
+    {
+        ClickOn();
+    }
+
     void UpdateButtons()
     {
-        StartRecord.SetActive(StartRec);
-        StopRecord.SetActive(StopRec);
+        Debug.Log(StartRec + " Start");
+        Debug.Log(StopRec + " Stop");
+        StartR.SetActive(StartRec);
+        StopR.SetActive(StopRec);
     }
 
     // Update is called once per frame

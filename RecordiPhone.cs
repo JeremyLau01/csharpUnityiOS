@@ -5,15 +5,13 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using GetSocialSdk.Capture.Scripts;
-using GetSocialSdk.Core;
-using GetSocialSdk.Ui;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class RecordiPhone : MonoBehaviour
 {
-	public static GameControl instance;         //A reference to our game control script so we can access it statically.
+	public static RecordiPhone instance;         //A reference to our game control script so we can access it statically.
 
 	public GetSocialCapturePreview capturePreview;
 	private GetSocialCapture _capture;

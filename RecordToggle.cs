@@ -11,7 +11,7 @@ public class RecordToggle : MonoBehaviour
 
     public Button AssetStartRec;
     public Button AssetStopRec;
-    public Button AssetViewRec; // no custom button yet :)
+    public Button AssetViewRec;
     //public Button AssetSaveRec; - when get this working in the first place :)
 
     // For SetActive (can only do on game objects)
@@ -22,6 +22,11 @@ public class RecordToggle : MonoBehaviour
     bool StartRecActive = true;
     bool StopRecActive = false;
 
+    // Custom view button
+    bool ViewableRecording = false;
+    // For SetActive (can only do on game objects)
+    public GameObject ViewR;
+
 
 
     // Start is called before the first frame update
@@ -29,6 +34,7 @@ public class RecordToggle : MonoBehaviour
     {
         StartRecord.onClick.AddListener(ClickButton);
         StopRecord.onClick.AddListener(ClickButton);
+        AssetViewRec.onClick.AddListener(ViewRecording);
         UpdateButtons();
     }
 
@@ -36,24 +42,31 @@ public class RecordToggle : MonoBehaviour
     {
         StartRecActive = !StartRecActive;
         StopRecActive = !StopRecActive;
-        UpdateButtons();
         // Click asset buttons according to the current boolean values
         if (StopRecActive)
         {
             AssetStartRec.onClick.Invoke();
+            ViewableRecording = false;
         }
         else
         {
             AssetStopRec.onClick.Invoke();
+            ViewableRecording = true;
         }
+        UpdateButtons();
+    }
 
-
+    void ViewRecording()
+    {
+        AssetViewRec.onClick.Invoke();
     }
 
     void UpdateButtons()
     {
         StartR.SetActive(StartRecActive);
         StopR.SetActive(StopRecActive);
+        ViewR.SetActive(ViewableRecording);
+
     }
 
     // Update is called once per frame

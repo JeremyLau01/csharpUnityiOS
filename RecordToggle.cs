@@ -8,6 +8,7 @@ public class RecordToggle : MonoBehaviour
     // For detecting click
     public Button StartRecord;
     public Button StopRecord;
+    public Button ViewRecord; //
 
     public Button AssetStartRec;
     public Button AssetStopRec;
@@ -34,7 +35,7 @@ public class RecordToggle : MonoBehaviour
     {
         StartRecord.onClick.AddListener(ClickButton);
         StopRecord.onClick.AddListener(ClickButton);
-        AssetViewRec.onClick.AddListener(ViewRecording);
+        ViewRecord.onClick.AddListener(ViewRecording);
         UpdateButtons();
     }
 

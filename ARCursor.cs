@@ -30,7 +30,7 @@ public class ARCursor : MonoBehaviour
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             Touch touch = Input.GetTouch(0);
-            if (touch.rawPosition.y > 90.1)
+            if (touch.rawPosition.y < (Screen.height - 90.1))
             {
                 Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
                 hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object

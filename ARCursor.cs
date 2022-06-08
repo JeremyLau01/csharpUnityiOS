@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.UI; // for test text
 
 public class ARCursor : MonoBehaviour
 {
     public GameObject cursorChildObject;
     public GameObject objectToPlace;
     public ARRaycastManager raycastManager;
+
+
+    public Transform abovePoint; // for specifying touch target area
 
 
 
@@ -26,17 +30,30 @@ public class ARCursor : MonoBehaviour
     void Update()
     {
         UpdateCursor();
-        
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+
+        if (Input.touchCount > 0)
         {
-            Touch touch = Input.GetTouch(0);
-            if (touch.rawPosition.y < (Screen.height - 90.1))
+            Touch touch = Input.GetTouch(0);//error?
+            if (touch.phase == TouchPhase.Began)
             {
-                Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
-                hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object
-                hoop.transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z)); // rotate on y axis towards user, using AR camera's position
+                Vector2 screenPosition = Camera.main.WorldToScreenPoint(abovePoint.position);
+                if (touch.position.y > screenPosition.y)
+                {
+                    Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
+                    hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object
+                                                                                                          // rotate on y axis towards user, using AR camera's position
+                    hoop.transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z));
+                }
             }
         }
+        //if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began && Input.GetTouch(0).position.y < abovePoint.position.y)
+        //{
+        //    
+        //    Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
+        //    hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object
+        //    // rotate on y axis towards user, using AR camera's position
+        //    hoop.transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z));
+        //}
     }
 
     void UpdateCursor()

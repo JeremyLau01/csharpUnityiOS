@@ -12,7 +12,7 @@ public class ARCursor : MonoBehaviour
 
 
     // For screen tap space
-    public Transform threshold;
+    //public Transform threshold;
 
 
     // trying to have the object point towards the viewer on place down
@@ -34,9 +34,9 @@ public class ARCursor : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            Vector3 screenPosThresh = Camera.main.WorldToScreenPoint(threshold.position);
+            //Vector3 screenPosThresh = Camera.main.WorldToScreenPoint(threshold.position);
 
-            if (touch.phase == TouchPhase.Began && touch.position.y > screenPosThresh.y)
+            if (touch.phase == TouchPhase.Began && touch.position.y > 200) //screenPosThresh.y
             {
                 Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
                 hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object

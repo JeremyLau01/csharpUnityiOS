@@ -11,9 +11,6 @@ public class ARCursor : MonoBehaviour
     public ARRaycastManager raycastManager;
 
 
-    public Transform abovePoint; // for specifying touch target area
-
-
 
     // trying to have the object point towards the viewer on place down
     public Transform target; // transform of the AR camera
@@ -33,16 +30,20 @@ public class ARCursor : MonoBehaviour
 
         if (Input.touchCount > 0)
         {
-            Touch touch = Input.GetTouch(0);//error?
+            Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
             {
-                Vector2 screenPosition = Camera.main.WorldToScreenPoint(abovePoint.position);
-                if (touch.position.y > screenPosition.y)
+                Ray raycast = Camera.main.ScreenPointToRay(new Vector3(touch.position.x, touch.position.y, 0.0f));
+                RaycastHit hit;
+                if (Physics.Raycast(raycast, out hit))
                 {
-                    Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
-                    hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object
-                                                                                                          // rotate on y axis towards user, using AR camera's position
-                    hoop.transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z));
+                    if (hit.collider.CompareTag("CorrectArea"))
+                    {
+                        Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
+                        hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object
+                                                                                                              // rotate on y axis towards user, using AR camera's position
+                        hoop.transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z));
+                    }
                 }
             }
         }
@@ -68,4 +69,5 @@ public class ARCursor : MonoBehaviour
             transform.rotation = hits[0].pose.rotation;
         }
     }
+
 }

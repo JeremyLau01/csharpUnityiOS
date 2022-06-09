@@ -11,6 +11,9 @@ public class ARCursor : MonoBehaviour
     public ARRaycastManager raycastManager;
 
 
+    // For screen tap space
+    public Transform threshold;
+
 
     // trying to have the object point towards the viewer on place down
     public Transform target; // transform of the AR camera
@@ -31,21 +34,16 @@ public class ARCursor : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
+            Vector3 screenPosThresh = Camera.main.WorldToScreenPoint(threshold.position);
+
+            if (touch.phase == TouchPhase.Began && touch.position.y > screenPosThresh.y)
             {
-                Ray raycast = Camera.main.ScreenPointToRay(new Vector3(touch.position.x, touch.position.y, 0.0f));
-                RaycastHit hit;
-                if (Physics.Raycast(raycast, out hit))
-                {
-                    if (hit.collider.CompareTag("CorrectArea"))
-                    {
-                        Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
-                        hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object
-                                                                                                              // rotate on y axis towards user, using AR camera's position
-                        hoop.transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z));
-                    }
-                }
+                Destroy(hoop); // destroy previous hoop, so that there will not be so many in one scene
+                hoop = GameObject.Instantiate(objectToPlace, transform.position, transform.rotation); // how set reference to hoop as new game object
+                                                                                                      // rotate on y axis towards user, using AR camera's position
+                hoop.transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z));
             }
+
         }
         //if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began && Input.GetTouch(0).position.y < abovePoint.position.y)
         //{

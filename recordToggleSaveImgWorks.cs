@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 using System;
 
-using VideoCreator;
+//using VideoCreator;
 
-[RequireComponent(typeof(AudioSource))]
+//[RequireComponent(typeof(AudioSource))]
 public class RecordToggle : MonoBehaviour
 {
     // For detecting click
@@ -37,11 +38,13 @@ public class RecordToggle : MonoBehaviour
     bool ViewableSave = false;
 
 
+    private string shareMessage;
+
     /// <summary>
 	/// this is the added github medium code
 	/// </summary>
 	/// public RenderTexture texture = null;
-
+    /*
     public RenderTexture texture;
 
 
@@ -49,17 +52,19 @@ public class RecordToggle : MonoBehaviour
     //private bool recordAudio = false;
     private bool saveAfterFinish = false;
 
-    private string cachePath = Application.persistentDataPath + "/video.mov"; // maybe need to change this to .mpeg
+    private string cachePath = "";
 
     //private long amountFrame = 0;
     private float startTime = 0;
 
     private long startTimeOffset = 6_000_000;
-
+    */
 
     // Start is called before the first frame update
     void Start()
     {
+        //cachePath = Application.persistentDataPath + "/video.mov"; // maybe need to change this to .mpeg
+
         StartRecord.onClick.AddListener(ClickButton);
         StopRecord.onClick.AddListener(ClickButton);
         ViewRecord.onClick.AddListener(ViewRecording);
@@ -67,8 +72,11 @@ public class RecordToggle : MonoBehaviour
         UpdateButtons();
 
 
+
         /// from medium
-        Application.targetFrameRate = 30;
+        //Application.targetFrameRate = 30;
+        //var source = gameObject.AddComponent<AudioSource>();
+        //source.Stop();
 
     }
 
@@ -82,14 +90,14 @@ public class RecordToggle : MonoBehaviour
             AssetStartRec.onClick.Invoke();
             ViewableRecording = false;
             ViewableSave = false;
-            StartRecMovWithNoAudio();
+            //StartRecMovWithNoAudio();
         }
         else
         {
             AssetStopRec.onClick.Invoke();
             ViewableRecording = true;
             ViewableSave = true;
-            FinishRec();
+            //FinishRec();
         }
         UpdateButtons();
     }
@@ -99,16 +107,19 @@ public class RecordToggle : MonoBehaviour
         AssetViewRec.onClick.Invoke();
     }
 
+    
     void SaveRecording()
     {
-        AssetSaveRec.onClick.Invoke();
-        SaveR.SetActive(false);
-        FinishRec();
+        //AssetSaveRec.onClick.Invoke();
+        //SaveR.SetActive(false);
+        ClickShareButton();
+        //FinishRec();
         // define ss to be the video we are saving, call function to find the video
         //byte[] ss = new byte[](....);
         //NativeGallery.Permission permission = NativeGallery.SaveVideoToGallery(ss, "Vertical Jumps", "Video.mp4", (success, path) => Debug.Log("Media save result: " + success + " " + path));
         //Destroy(ss);
     }
+    
 
     void UpdateButtons()
     {
@@ -122,7 +133,9 @@ public class RecordToggle : MonoBehaviour
     // Update is called once per frame - from medium
     void Update()
     {
-       if (isRecording)
+
+        /*
+        if (isRecording)
         {
             long time = (long)((Time.time - startTime) * 1_000_000) + startTimeOffset;
 
@@ -132,10 +145,12 @@ public class RecordToggle : MonoBehaviour
         {
             return;
         }
+        */
         
     }
 
     // from medium
+    /*
     public void StartRecMovWithNoAudio()
     {
 
@@ -163,5 +178,37 @@ public class RecordToggle : MonoBehaviour
         //recordAudio = false;
         saveAfterFinish = false;
     }
+    */
 
+
+    public void ClickShareButton()
+    {
+        shareMessage = "Check out this crazy jump!";
+
+        StartCoroutine(TakeScreenshotAndShare());
+    }
+
+    private IEnumerator TakeScreenshotAndShare()
+    {
+        yield return new WaitForEndOfFrame();
+
+        Texture2D ss = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+        ss.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+        ss.Apply();
+
+        string filePath = Path.Combine(Application.temporaryCachePath, "shared img.png");
+        File.WriteAllBytes(filePath, ss.EncodeToPNG());
+
+        // To avoid memory leaks
+        Destroy(ss);
+
+        new NativeShare().AddFile(filePath)
+            .SetSubject("Jeremy's AR Basketball Hoop App").SetText(shareMessage).SetUrl("https://github.com/yasirkula/UnityNativeShare")
+            .SetCallback((result, shareTarget) => Debug.Log("Share result: " + result + ", selected app: " + shareTarget))
+            .Share();
+
+        // Share on WhatsApp only, if installed (Android only)
+        //if( NativeShare.TargetExists( "com.whatsapp" ) )
+        //	new NativeShare().AddFile( filePath ).AddTarget( "com.whatsapp" ).Share();
+    }
 }
